@@ -1,1 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Thompson Snow & Lawn Care · Benton Harbor, MI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fbfaf6; }
+  body { font-family: 'DM Sans', -apple-system, system-ui, sans-serif; }
+  img { display: block; max-width: 100%; }
+  *::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
 
+  /* ── Mobile responsive via container queries ── */
+  [data-site-root] { container-type: inline-size; container-name: site; }
+
+  @container site (max-width: 720px) {
+    [data-site-root] .tsl-grid-2,
+    [data-site-root] .tsl-grid-hero,
+    [data-site-root] .tsl-grid-calendar-main,
+    [data-site-root] .tsl-grid-closing,
+    [data-site-root] .tsl-grid-footer {
+      grid-template-columns: 1fr !important;
+      gap: 28px !important;
+    }
+    [data-site-root] .tsl-h1 { font-size: 44px !important; line-height: 1.02 !important; }
+    [data-site-root] .tsl-h2 { font-size: 32px !important; line-height: 1.1 !important; }
+    [data-site-root] .tsl-stats { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
+    [data-site-root] .tsl-cards-3 { grid-template-columns: 1fr !important; }
+    [data-site-root] .tsl-cards-2 { grid-template-columns: 1fr !important; }
+    [data-site-root] .tsl-svc-pick { grid-template-columns: repeat(2, 1fr) !important; }
+    [data-site-root] .tsl-sticky { position: static !important; }
+    [data-site-root] .tsl-nav-desktop { display: none !important; }
+    [data-site-root] .tsl-nav-mobile  { display: flex !important; }
+    [data-site-root] header { padding: 14px 20px !important; }
+    [data-site-root] section { padding-left: 22px !important; padding-right: 22px !important; }
+    [data-site-root] .tsl-hero-float-card { display: none !important; }
+    [data-site-root] button { min-height: 44px; }
+  }
+  .tsl-nav-mobile { display: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- ── Shared data ── -->
+<script type="text/babel">
+const TSL = {
+  name: 'Thompson Snow & Lawn Care',
+  phone: '(269) 555-0142',
+  email: 'hello@thompsonlawn.com',
+  town: 'Benton Harbor, MI',
+  address: '1842 Territorial Rd · Benton Harbor, MI 49022',
+  area: 'Benton Harbor · St. Joseph · Stevensville · Bridgman · Coloma · Watervliet',
+  tagline: 'Your neighbors in every season',
+  lawn: [
+    { name: 'Weekly mowing',   desc: 'Crisp lines, clean edges, grass clippings mulched in.' },
+    { name: 'Edging & trimming', desc: 'Sharp borders along walks, beds, and drives.' },
+    { name: 'Landscape beds',  desc: 'Design, install and refresh — stone, mulch, native plants.' },
+  ],
+  snow: [
+    { name: 'Driveway plowing',   desc: 'Cleared before the coffee’s cold. Residential routes across Berrien County.' },
+    { name: 'Sidewalk shoveling', desc: 'Hand-shoveled walks and porches, salted on request.' },
+  ],
+  testimonials: [
+    { quote: 'Showed up at 5 a.m. after the December storm. Drive was clear before I opened the blinds. Thompson’s the only call we make.', who: 'Karen H.', where: 'Shoreham' },
+    { quote: 'Bob and his boys have been mowing our place on Napier for nine years. Lines still straight as the day they started.', who: 'Rick & Linda M.', where: 'Benton Township' },
+    { quote: 'Rebuilt our front beds in a weekend — limestone, hostas, the works. Neighbors won’t stop asking.', who: 'Priya S.', where: 'St. Joseph' },
+  ],
+  photos: {
+    mowing:     'https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1400&q=80',
+    truck:      'https://images.unsplash.com/photo-1605893477799-b99e3b8b93fe?auto=format&fit=crop&w=1400&q=80',
+    plow:       'https://images.unsplash.com/photo-1608889476561-6242cfdbf622?auto=format&fit=crop&w=1400&q=80',
+    driveway:   'https://images.unsplash.com/photo-1483884105135-c06ea81a7a80?auto=format&fit=crop&w=1400&q=80',
+    landscape:  'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1400&q=80',
+    shovel:     'https://images.unsplash.com/photo-1547754980-3df97fed72a8?auto=format&fit=crop&w=1400&q=80',
+    hedges:     'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1400&q=80',
+    father_son: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1400&q=80',
+    lawn_wide:  'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1600&q=80',
+  },
+};
+
+function buildAvailability(seed = 7) {
+  const start = new Date(2026, 5, 19); // today
+  const days = [];
+  const rng = (n) => { let x = (seed*(n+1)*9301+49297)%233280; return x/233280; };
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const isWeekend = d.getDay()===0||d.getDay()===6;
+    days.push({ date: d, slots: [
+      { time:'7:30 AM',  free: rng(i)     > (isWeekend?.7:.35) },
+      { time:'10:00 AM', free: rng(i+50)  > (isWeekend?.8:.45) },
+      { time:'1:30 PM',  free: rng(i+100) > (isWeekend?.6:.5)  },
+    ]});
+  }
+  return days;
+}
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOWS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+</script>
+
+<!-- ── Lakeside site ── -->
+<script type="text/babel">
+// ── Palette ──
+const B = {
+  lake:'#12384f', lake2:'#1a4e6b',
+  ice:'#e8eef1',  ice2:'#f5f8fa',
+  birch:'#fbfaf6', ink:'#0f1e26',
+  muted:'#5a6b73', border:'#d9dfe2',
+  pine:'#355641',  wheat:'#d4a84a',
+  wheat2:'#b88a2e', rust:'#b5562a',
+};
+const D = { fontFamily:'"Fraunces", Georgia, serif' };
+
+// ── Icons ──
+const LI = ({d,s=20,color='currentColor',sw=1.6}) => (
+  <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">{d}</svg>
+);
+const IArrow = p => <LI {...p} d={<path d="M5 12h14M13 5l7 7-7 7"/>}/>;
+const ILeaf  = p => <LI {...p} d={<><path d="M5 20c0-8 6-14 15-14 0 8-6 14-15 14z"/><path d="M5 20L18 7"/></>}/>;
+const IFlake = p => <LI {...p} d={<><path d="M12 2v20M2 12h20M4.5 4.5l15 15M19.5 4.5l-15 15"/></>}/>;
+const IPhone = p => <LI {...p} d={<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>}/>;
+const ICheck = p => <LI {...p} d={<path d="M4 12l5 5L20 6"/>}/>;
+const IClock = p => <LI {...p} d={<><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></>}/>;
+const IPin   = p => <LI {...p} d={<><path d="M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></>}/>;
+
+// ── Helpers ──
+function pBtn() {
+  return { background:B.lake, color:B.birch, border:'none', padding:'14px 22px', fontSize:14.5, fontWeight:600,
+           borderRadius:4, cursor:'pointer', fontFamily:'inherit', display:'inline-flex', alignItems:'center', gap:10 };
+}
+function gBtn() {
+  return { background:'transparent', color:B.lake, border:`1px solid ${B.border}`, padding:'11px 18px',
+           fontSize:13.5, fontWeight:600, borderRadius:4, cursor:'pointer', fontFamily:'inherit',
+           display:'inline-flex', alignItems:'center', gap:8 };
+}
+
+// ── Logo ──
+function Logo({ invert }) {
+  const c = invert ? B.birch : B.lake;
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:12}}>
+      <svg width="38" height="38" viewBox="0 0 40 40" fill="none">
+        <rect x="1" y="1" width="38" height="38" rx="2" stroke={c} strokeWidth="1.2" fill="none"/>
+        <path d="M8 27 Q 14 22,20 26 T 32 25" stroke={c} strokeWidth="1.4" fill="none"/>
+        <path d="M8 22 Q 14 17,20 21 T 32 20" stroke={c} strokeWidth="1.4" fill="none" opacity=".4"/>
+        <path d="M12 14 L15 10 L18 14 M20 14 L23 9 L26 14 L28 11" stroke={c} strokeWidth="1.4" fill="none"/>
+      </svg>
+      <div style={{lineHeight:1}}>
+        <div style={{...D, fontSize:18, fontWeight:600, letterSpacing:'-0.01em', color:c}}>Thompson</div>
+        <div style={{fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color: invert?B.ice:B.muted, marginTop:2, fontWeight:500}}>Snow + Lawn · Est. 1987</div>
+      </div>
+    </div>
+  );
+}
+
+// ── Header ──
+function Header({ route, setRoute }) {
+  const [open, setOpen] = React.useState(false);
+  const go = id => { setRoute(id); setOpen(false); };
+  const nav = [{id:'home',label:'Home'},{id:'services',label:'Services'},{id:'book',label:'Book'}];
+  return (
+    <header style={{ background:B.birch, borderBottom:`1px solid ${B.border}`, padding:'20px 48px',
+                     display:'flex', alignItems:'center', justifyContent:'space-between',
+                     position:'sticky', top:0, zIndex:10 }}>
+      <div onClick={()=>go('home')} style={{cursor:'pointer'}}><Logo/></div>
+      <nav className="tsl-nav-desktop" style={{display:'flex', gap:4, alignItems:'center'}}>
+        {nav.map(it => (
+          <button key={it.id} onClick={()=>go(it.id)} style={{
+            background: route===it.id ? B.ice : 'transparent', border:'none', cursor:'pointer',
+            padding:'9px 16px', fontFamily:'inherit', fontSize:14,
+            fontWeight: route===it.id ? 600 : 500, color:B.ink, borderRadius:4,
+          }}>{it.label}</button>
+        ))}
+        <button onClick={()=>go('book')} style={{ marginLeft:16, background:B.lake, color:B.birch,
+          border:'none', padding:'10px 18px', fontSize:14, fontWeight:600, borderRadius:4,
+          cursor:'pointer', fontFamily:'inherit', display:'flex', alignItems:'center', gap:8,
+        }}>Schedule <IArrow s={16}/></button>
+      </nav>
+      {/* Mobile nav */}
+      <button className="tsl-nav-mobile" onClick={()=>setOpen(o=>!o)} style={{
+        background:B.lake, color:B.birch, border:'none', width:44, height:44,
+        borderRadius:4, cursor:'pointer', display:'none', alignItems:'center', justifyContent:'center', padding:0,
+      }} aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke={B.birch} strokeWidth="1.8">
+          {open ? <><path d="M4 4 L16 16"/><path d="M16 4 L4 16"/></> : <><path d="M2 5 H18"/><path d="M2 10 H18"/><path d="M2 15 H18"/></>}
+        </svg>
+      </button>
+      {open && (
+        <div style={{ position:'absolute', top:'100%', left:0, right:0, background:B.birch,
+                      borderBottom:`1px solid ${B.border}`, boxShadow:'0 8px 24px rgba(0,0,0,.1)', zIndex:20 }}>
+          {nav.map(it => (
+            <button key={it.id} onClick={()=>go(it.id)} style={{
+              display:'block', width:'100%', textAlign:'left', background:'none', border:'none',
+              padding:'18px 24px', fontFamily:'inherit', fontSize:17, fontWeight: route===it.id?600:400,
+              color: route===it.id ? B.lake : B.ink, cursor:'pointer',
+              borderBottom:`1px solid ${B.border}`,
+            }}>{it.label}</button>
+          ))}
+          <a href={`tel:${TSL.phone}`} style={{
+            display:'block', padding:'18px 24px', color:B.lake, textDecoration:'none',
+            fontSize:15, fontWeight:600, fontFamily:'inherit',
+          }}><IPhone s={15} color={B.lake}/> {TSL.phone}</a>
+        </div>
+      )}
+    </header>
+  );
+}
+
+// ── Animated hero gallery ──
+function HeroGallery() {
+  const slides = [
+    { src:TSL.photos.lawn_wide, tag:'Ridgeway Ln.',    season:'Green' },
+    { src:TSL.photos.mowing,    tag:'St. Joseph bluff',season:'Green' },
+    { src:TSL.photos.landscape, tag:'Pipestone beds',  season:'Green' },
+    { src:TSL.photos.driveway,  tag:'Dec. 14th storm', season:'White' },
+    { src:TSL.photos.plow,      tag:'Pre-dawn route',  season:'White' },
+    { src:TSL.photos.hedges,    tag:'Napier Ave.',     season:'Green' },
+  ];
+  const [idx, setIdx] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+  React.useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setIdx(i => (i+1) % slides.length), 4200);
+    return () => clearInterval(id);
+  }, [paused]);
+  return (
+    <div onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)}
+      style={{ position:'relative', width:'100%', height:520, overflow:'hidden', borderRadius:2, background:B.ice }}>
+      {slides.map((s,i) => (
+        <img key={i} src={s.src} alt="" loading={i<2?'eager':'lazy'} style={{
+          position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover',
+          opacity: i===idx ? 1 : 0, transition:'opacity 1.2s ease-in-out',
+          animation: i===idx ? 'kBurns 5s ease-out both' : 'none',
+        }}/>
+      ))}
+      <div style={{ position:'absolute', top:20, left:20, display:'inline-flex', gap:8, alignItems:'center',
+                    background:'rgba(18,56,79,.85)', color:B.birch, padding:'7px 13px', borderRadius:20,
+                    fontSize:11.5, letterSpacing:'0.12em', textTransform:'uppercase', fontWeight:600,
+                    backdropFilter:'blur(6px)' }}>
+        <span style={{color: slides[idx].season==='Green' ? '#8ec29a' : '#bfdbea'}}>
+          {slides[idx].season==='Green' ? '●' : '❄'}
+        </span>
+        {slides[idx].tag}
+      </div>
+      <div style={{ position:'absolute', bottom:20, left:20, right:20, display:'flex', gap:6 }}>
+        {slides.map((_,i) => (
+          <button key={i} onClick={()=>setIdx(i)}
+            style={{ flex:1, height:3, padding:0, background:'rgba(255,255,255,.35)', border:'none', cursor:'pointer', position:'relative', overflow:'hidden' }}>
+            <span style={{ position:'absolute', inset:0, background:B.wheat, transformOrigin:'left',
+              transform:`scaleX(${i<idx?1:i===idx?1:0})`,
+              animation: i===idx&&!paused ? 'lksProg 4.2s linear' : 'none',
+            }}/>
+          </button>
+        ))}
+      </div>
+      <style>{`
+        @keyframes kBurns { 0%{transform:scale(1.02) translate(0,0)} 100%{transform:scale(1.12) translate(-1.5%,-1%)} }
+        @keyframes lksProg { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+      `}</style>
+    </div>
+  );
+}
+
+// ── Home ──
+function Home({ setRoute }) {
+  return (
+    <div>
+      {/* Hero */}
+      <section style={{padding:'64px 48px 30px'}}>
+        <div className="tsl-grid-hero" style={{display:'grid', gridTemplateColumns:'1fr 1.1fr', gap:56, alignItems:'end'}}>
+          <div>
+            <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:20}}>
+              <span style={{width:6, height:6, borderRadius:'50%', background:B.wheat}}/>
+              <span style={{fontSize:12, letterSpacing:'0.14em', color:B.muted, textTransform:'uppercase', fontWeight:500}}>Benton Harbor · Since 1987</span>
+            </div>
+            <h1 className="tsl-h1" style={{...D, fontSize:86, lineHeight:0.96, margin:'0 0 28px', fontWeight:400, letterSpacing:'-0.035em', color:B.lake}}>
+              Your neighbors<br/>in every <em style={{fontStyle:'italic', color:B.wheat2}}>season</em>.
+            </h1>
+            <p style={{fontSize:19, lineHeight:1.55, color:B.ink, maxWidth:460, margin:'0 0 36px'}}>
+              A family-run crew keeping Southwest Michigan properties mown, planted, and plowed — three generations, one handshake.
+            </p>
+            <div style={{display:'flex', gap:14, alignItems:'center', flexWrap:'wrap'}}>
+              <button onClick={()=>setRoute('book')} style={pBtn()}>Check availability <IArrow s={16}/></button>
+              <a href={`tel:${TSL.phone}`} style={{color:B.ink, textDecoration:'none', fontSize:15, fontWeight:500, display:'flex', alignItems:'center', gap:10, padding:'13px 0'}}>
+                <IPhone s={17} color={B.lake}/> {TSL.phone}
+              </a>
+            </div>
+          </div>
+          <div style={{position:'relative'}}>
+            <HeroGallery/>
+            <div className="tsl-hero-float-card" style={{
+              position:'absolute', bottom:-30, left:-30,
+              background:B.birch, padding:'20px 22px',
+              borderLeft:`3px solid ${B.wheat}`,
+              boxShadow:'0 8px 24px rgba(15,30,38,.12)', maxWidth:260,
+            }}>
+              <div style={{fontSize:12, color:B.muted, letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600, marginBottom:6}}>This week</div>
+              <div style={{...D, fontSize:20, lineHeight:1.25, fontWeight:500, color:B.ink}}>
+                Spring mowing routes are filling — Jun 23 opens next.
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Stats */}
+        <div className="tsl-stats" style={{ marginTop:72, paddingTop:28, borderTop:`1px solid ${B.border}`,
+                                             display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:36 }}>
+          {[
+            {k:'39 yrs',  v:'Family-owned and still on the same truck routes'},
+            {k:'400+',    v:'Properties under weekly care across Berrien County'},
+            {k:'4-hour',  v:'Plow response guarantee on any 2-inch storm'},
+            {k:'100%',    v:'Licensed, insured, bonded — every crew, every truck'},
+          ].map(s => (
+            <div key={s.k}>
+              <div style={{...D, fontSize:32, fontWeight:500, color:B.lake, letterSpacing:'-0.02em'}}>{s.k}</div>
+              <div style={{fontSize:13.5, color:B.muted, marginTop:6, lineHeight:1.45}}>{s.v}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Season cards */}
+      <section style={{padding:'100px 48px 40px'}}>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:40, flexWrap:'wrap', gap:16}}>
+          <div>
+            <div style={{fontSize:12, letterSpacing:'0.18em', color:B.wheat2, textTransform:'uppercase', fontWeight:600, marginBottom:8}}>Two seasons, one crew</div>
+            <h2 style={{...D, fontSize:52, fontWeight:400, margin:0, letterSpacing:'-0.025em', color:B.lake}}>What we're doing now.</h2>
+          </div>
+          <button onClick={()=>setRoute('services')} style={gBtn()}>All services <IArrow s={15}/></button>
+        </div>
+        <div className="tsl-grid-2" style={{display:'grid', gridTemplateColumns:'1.5fr 1fr', gap:16}}>
+          <SeasonCard lead eyebrow="Now booking · Apr–Oct" title="Lawn &amp; landscape"
+            body="Weekly mowing, sharp edging, and bed work from crocus season through leaf drop. Same crew every visit."
+            img={TSL.photos.mowing} tag="Green Season" accent={B.pine} icon={<ILeaf s={18} color={B.pine}/>}
+            services={['Weekly mowing','Edging & trimming','Landscape bed design']} onClick={()=>setRoute('services')}/>
+          <SeasonCard eyebrow="Next · Nov–Mar" title="Snow &amp; ice"
+            body="Driveways cleared before sunrise, walks shoveled by hand, sidewalks salted on request."
+            img={TSL.photos.driveway} tag="White Season" accent={B.lake} icon={<IFlake s={18} color={B.lake}/>}
+            services={['Driveway plowing','Sidewalk shoveling']} onClick={()=>setRoute('services')}/>
+        </div>
+      </section>
+
+      {/* Story */}
+      <section style={{padding:'80px 48px', background:B.ice}}>
+        <div className="tsl-grid-2" style={{display:'grid', gridTemplateColumns:'1fr 1.2fr', gap:72, alignItems:'center'}}>
+          <img src={TSL.photos.father_son} alt="" style={{width:'100%', height:520, objectFit:'cover', borderRadius:2}}/>
+          <div>
+            <div style={{fontSize:12, letterSpacing:'0.18em', color:B.wheat2, textTransform:'uppercase', fontWeight:600, marginBottom:14}}>The family</div>
+            <h2 className="tsl-h2" style={{...D, fontSize:48, fontWeight:400, margin:'0 0 24px', lineHeight:1.05, letterSpacing:'-0.025em', color:B.lake}}>
+              Three Thompsons, one truck yard, and a whole lot of <em>respect for concrete</em>.
+            </h2>
+            <p style={{fontSize:17, lineHeight:1.7, color:B.ink, margin:'0 0 18px'}}>
+              Bob started with a Toro and a rusted Chevy in '87. Today his sons Danny and Ray run the operation — still answering the phone themselves, still getting snow off drives before the coffee's cold.
+            </p>
+            <p style={{fontSize:17, lineHeight:1.7, color:B.ink, margin:'0 0 32px'}}>
+              We're not the biggest outfit in Berrien County. We are probably the most on-time.
+            </p>
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:18, maxWidth:460}}>
+              {[
+                {n:'01', t:'We answer the phone. A real person, most every time.'},
+                {n:'02', t:"We show up when we said. No 'between noon and five.'"},
+                {n:'03', t:'We leave it tidy. Edges clean, no tracks on the walk.'},
+                {n:'04', t:'We tell you the price. No surprises on the invoice.'},
+              ].map(p => (
+                <div key={p.n} style={{display:'flex', gap:14, alignItems:'flex-start'}}>
+                  <div style={{...D, fontSize:14, color:B.wheat2, fontWeight:600, letterSpacing:'0.05em', paddingTop:1}}>{p.n}</div>
+                  <div style={{fontSize:14.5, lineHeight:1.5, color:B.ink}}>{p.t}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section style={{padding:'90px 48px'}}>
+        <div style={{textAlign:'center', maxWidth:600, margin:'0 auto 52px'}}>
+          <div style={{fontSize:12, letterSpacing:'0.18em', color:B.wheat2, textTransform:'uppercase', fontWeight:600, marginBottom:12}}>From neighbors</div>
+          <h2 style={{...D, fontSize:48, fontWeight:400, margin:0, lineHeight:1.1, letterSpacing:'-0.025em', color:B.lake}}>Kind words from the route.</h2>
+        </div>
+        <div className="tsl-cards-3" style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20}}>
+          {TSL.testimonials.map((t,i) => (
+            <div key={i} style={{ background:B.birch, padding:'32px 28px', border:`1px solid ${B.border}`, display:'flex', flexDirection:'column', gap:18 }}>
+              <div style={{display:'flex', gap:4, color:B.wheat}}>
+                {[...Array(5)].map((_,j) => <svg key={j} width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg>)}
+              </div>
+              <p style={{...D, fontSize:18, lineHeight:1.45, color:B.ink, margin:0, fontWeight:400, flex:1}}>"{t.quote}"</p>
+              <div style={{paddingTop:18, borderTop:`1px solid ${B.border}`, display:'flex', gap:12, alignItems:'center'}}>
+                <div style={{ width:40, height:40, borderRadius:'50%', background:[B.lake,B.pine,B.wheat2][i], color:B.birch,
+                               display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Fraunces,serif', fontSize:15, fontWeight:600 }}>
+                  {t.who.split(' ').map(s=>s[0]).join('')}
+                </div>
+                <div>
+                  <div style={{fontSize:14.5, fontWeight:600}}>{t.who}</div>
+                  <div style={{fontSize:12.5, color:B.muted}}>{t.where}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <Closing setRoute={setRoute}/>
+      <Footer/>
+    </div>
+  );
+}
+
+// ── Services ──
+function Services({ setRoute }) {
+  return (
+    <div>
+      <section style={{padding:'80px 48px 60px', background:B.lake, color:B.birch}}>
+        <div style={{fontSize:12, letterSpacing:'0.2em', color:B.wheat, textTransform:'uppercase', fontWeight:600, marginBottom:14}}>Services</div>
+        <div className="tsl-grid-hero" style={{display:'grid', gridTemplateColumns:'1.3fr 1fr', gap:60, alignItems:'end'}}>
+          <h1 className="tsl-h1" style={{...D, fontSize:88, fontWeight:400, margin:0, letterSpacing:'-0.035em', lineHeight:0.98}}>
+            What we do,<br/><em style={{fontStyle:'italic', color:B.wheat}}>all twelve months</em>.
+          </h1>
+          <p style={{fontSize:17, lineHeight:1.7, color:B.ice, margin:0, maxWidth:420}}>
+            A short, honest list. We'd rather do five things well than fifteen poorly. Pricing below, or give us a ring for a quote.
+          </p>
+        </div>
+      </section>
+
+      {/* Lawn */}
+      <section style={{padding:'80px 48px 60px'}}>
+        <SeasonLeader kicker="Green Season · Apr 1 – Oct 31" title="Lawn & landscape" accent={B.pine} icon={<ILeaf s={22} color={B.pine}/>}
+          desc="The mowers roll Monday through Friday. Rain backs everything up a day — your route slot moves with it."/>
+        <div className="tsl-cards-3" style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18, marginTop:40}}>
+          {[
+            {...TSL.lawn[0], price:'$45', unit:'per visit',   img:TSL.photos.mowing,   details:['Mulched clippings','Consistent stripe pattern','Weekly or bi-weekly']},
+            {...TSL.lawn[1], price:'$25', unit:'per visit',   img:TSL.photos.hedges,   details:['Walks, drives, beds','String-trimmer finish','Cleanup included']},
+            {...TSL.lawn[2], price:'By project', unit:'quote on site', img:TSL.photos.landscape, details:['Design consultation','Native & ornamental plants','Stone, mulch, steel edging']},
+          ].map((s,i) => <ServiceCard key={i} {...s} accent={B.pine}/>)}
+        </div>
+      </section>
+
+      {/* Snow */}
+      <section style={{padding:'60px 48px 60px', background:B.ice2}}>
+        <SeasonLeader kicker="White Season · Nov 1 – Mar 31" title="Snow & ice" accent={B.lake} icon={<IFlake s={22} color={B.lake}/>}
+          desc="Seasonal contracts trigger at 2 inches — automatically. On-call service available for Berrien County residents."/>
+        <div className="tsl-cards-2" style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:18, marginTop:40}}>
+          {[
+            {...TSL.snow[0], price:'$55', unit:'per event', img:TSL.photos.plow,   details:['Triggered at 2" accumulation','Cleared by 7am most mornings','Salted on request']},
+            {...TSL.snow[1], price:'$35', unit:'per event', img:TSL.photos.shovel, details:['Hand-shoveled walks & porches','Salt/de-icer optional','Clean down to concrete']},
+          ].map((s,i) => <ServiceCard key={i} {...s} accent={B.lake}/>)}
+        </div>
+      </section>
+
+      {/* Promise */}
+      <section style={{padding:'80px 48px'}}>
+        <div style={{ background:B.lake, color:B.birch, padding:'56px', display:'grid',
+                       gridTemplateColumns:'auto 1fr auto', gap:40, alignItems:'center', borderRadius:2 }}>
+          <div style={{ width:120, height:120, borderRadius:'50%', border:`2px solid ${B.wheat}`,
+                         display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center' }}>
+            <div style={{...D, fontSize:44, fontWeight:500, color:B.wheat, lineHeight:1}}>4</div>
+            <div style={{fontSize:11, letterSpacing:'0.2em', color:B.ice, textTransform:'uppercase', marginTop:2}}>hours</div>
+          </div>
+          <div>
+            <div style={{fontSize:12, letterSpacing:'0.2em', color:B.wheat, textTransform:'uppercase', fontWeight:600, marginBottom:10}}>The Thompson Promise</div>
+            <h3 style={{...D, fontSize:34, fontWeight:400, margin:'0 0 10px', lineHeight:1.15, letterSpacing:'-0.02em'}}>
+              Your driveway is plowed within four hours of 2 inches — or your next event is on us.
+            </h3>
+            <p style={{fontSize:15, color:B.ice, margin:0, maxWidth:560}}>Available on seasonal residential contracts in our core service area.</p>
+          </div>
+          <button onClick={()=>setRoute('book')} style={{...pBtn(), background:B.wheat, color:B.ink}}>Get started <IArrow s={15}/></button>
+        </div>
+      </section>
+
+      {/* Area */}
+      <section style={{padding:'20px 48px 80px'}}>
+        <div className="tsl-grid-2" style={{display:'grid', gridTemplateColumns:'1fr 1.1fr', gap:40}}>
+          <div style={{padding:'40px 0'}}>
+            <div style={{fontSize:12, letterSpacing:'0.18em', color:B.wheat2, textTransform:'uppercase', fontWeight:600, marginBottom:12}}>Where we work</div>
+            <h2 style={{...D, fontSize:44, fontWeight:400, margin:'0 0 20px', lineHeight:1.05, letterSpacing:'-0.025em', color:B.lake}}>A 12-mile circle from the shop.</h2>
+            <p style={{fontSize:16.5, color:B.ink, lineHeight:1.65, margin:'0 0 28px'}}>
+              From the bluff in St. Joseph down to Bridgman, east to Coloma and Watervliet. Outside the line? Give us a call — we've made exceptions for good neighbors.
+            </p>
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:6}}>
+              {['Benton Harbor','St. Joseph','Stevensville','Bridgman','Coloma','Watervliet','Baroda','Shoreham'].map(t => (
+                <div key={t} style={{display:'flex', alignItems:'center', gap:10, padding:'10px 0', borderBottom:`1px solid ${B.border}`, fontSize:14.5}}>
+                  <IPin s={14} color={B.wheat2}/> {t}
+                </div>
+              ))}
+            </div>
+          </div>
+          <AreaMap/>
+        </div>
+      </section>
+
+      <Closing setRoute={setRoute}/>
+      <Footer/>
+    </div>
+  );
+}
+
+// ── Book ──
+function Book({ setRoute }) {
+  const [svc, setSvc] = React.useState('mowing');
+  const [freq, setFreq] = React.useState('weekly');
+  const [sel, setSel] = React.useState(null);
+  const [done, setDone] = React.useState(false);
+  const days = React.useMemo(() => buildAvailability(17), []);
+  const [form, setForm] = React.useState({ name:'', phone:'', address:'', notes:'' });
+  const can = sel && form.name && form.phone && form.address;
+
+  if (done) return <BookSuccess sel={sel} days={days} form={form} setRoute={setRoute}/>;
+
+  return (
+    <div>
+      <section style={{padding:'60px 48px 40px', background:B.birch, borderBottom:`1px solid ${B.border}`}}>
+        <div style={{fontSize:12, letterSpacing:'0.18em', color:B.wheat2, textTransform:'uppercase', fontWeight:600, marginBottom:12}}>Schedule a visit</div>
+        <h1 style={{...D, fontSize:68, fontWeight:400, margin:0, letterSpacing:'-0.03em', color:B.lake, lineHeight:1}}>Book in three steps.</h1>
+        <p style={{fontSize:17, color:B.ink, maxWidth:560, margin:'18px 0 0'}}>
+          Pick what you need, choose an open morning, leave your details. We'll call within the hour to confirm.
+        </p>
+      </section>
+
+      <section style={{padding:'50px 48px 80px'}}>
+        <div className="tsl-grid-calendar-main" style={{display:'grid', gridTemplateColumns:'1.3fr 1fr', gap:40}}>
+          <div>
+            <StepHead n="01" title="Choose a service"/>
+            <div className="tsl-svc-pick" style={{display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:10, marginTop:18, marginBottom:36}}>
+              {[
+                {id:'mowing',label:'Mowing', season:'Green',price:'From $45'},
+                {id:'edging',label:'Edging', season:'Green',price:'From $25'},
+                {id:'beds',  label:'Beds',   season:'Green',price:'Quote'},
+                {id:'plow',  label:'Plowing',season:'White',price:'From $55'},
+                {id:'shovel',label:'Shovel', season:'White',price:'From $35'},
+              ].map(s => (
+                <button key={s.id} onClick={()=>setSvc(s.id)} style={{
+                  background: svc===s.id ? B.lake : B.birch, color: svc===s.id ? B.birch : B.ink,
+                  border:`1.5px solid ${svc===s.id ? B.lake : B.border}`, padding:'16px 12px 14px',
+                  fontFamily:'inherit', textAlign:'left', cursor:'pointer', borderRadius:4, transition:'all .15s',
+                }}>
+                  <div style={{fontSize:10.5, letterSpacing:'0.12em', textTransform:'uppercase', opacity:.7, marginBottom:6, fontWeight:600}}>
+                    {s.season==='Green' ? <ILeaf s={11}/> : <IFlake s={11}/>} {s.season}
+                  </div>
+                  <div style={{fontSize:15, fontWeight:600}}>{s.label}</div>
+                  <div style={{fontSize:12, opacity:.7, marginTop:3}}>{s.price}</div>
+                </button>
+              ))}
+            </div>
+
+            <div style={{marginBottom:36}}>
+              <div style={{fontSize:13, color:B.muted, marginBottom:10, fontWeight:500}}>Frequency</div>
+              <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>
+                {['one-time','weekly','bi-weekly','seasonal'].map(f => (
+                  <button key={f} onClick={()=>setFreq(f)} style={{
+                    background: freq===f ? B.wheat : 'transparent', color:B.ink,
+                    border:`1px solid ${freq===f ? B.wheat : B.border}`,
+                    padding:'8px 16px', fontFamily:'inherit', fontSize:13, fontWeight:500,
+                    cursor:'pointer', borderRadius:20, textTransform:'capitalize',
+                  }}>{f}</button>
+                ))}
+              </div>
+            </div>
+
+            <StepHead n="02" title="Pick a time"/>
+            <Cal days={days} sel={sel} onSel={setSel}/>
+          </div>
+
+          <div>
+            <div className="tsl-sticky" style={{ position:'sticky', top:100, background:B.birch, border:`1px solid ${B.border}`, padding:28, borderRadius:2 }}>
+              <StepHead n="03" title="Your details" compact/>
+              <div style={{marginTop:18}}>
+                {[
+                  {l:'Name',             k:'name',    ph:'First and last'},
+                  {l:'Phone',            k:'phone',   ph:'(269) 555-0100'},
+                  {l:'Property address', k:'address', ph:'Street, city'},
+                ].map(f => (
+                  <div key={f.k} style={{marginBottom:14}}>
+                    <div style={{fontSize:12, color:B.muted, marginBottom:6, fontWeight:500}}>{f.l}</div>
+                    <input value={form[f.k]} onChange={e=>setForm({...form,[f.k]:e.target.value})} placeholder={f.ph} style={{
+                      width:'100%', background:B.birch, border:`1px solid ${B.border}`, padding:'11px 13px',
+                      fontFamily:'inherit', fontSize:14.5, color:B.ink, outline:'none', borderRadius:3,
+                    }}/>
+                  </div>
+                ))}
+                <div style={{marginBottom:14}}>
+                  <div style={{fontSize:12, color:B.muted, marginBottom:6, fontWeight:500}}>Notes</div>
+                  <textarea value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} rows={2}
+                    placeholder="Gate code, dog, anything else" style={{
+                      width:'100%', background:B.birch, border:`1px solid ${B.border}`, padding:'11px 13px',
+                      fontFamily:'inherit', fontSize:14.5, color:B.ink, outline:'none', borderRadius:3, resize:'vertical',
+                    }}/>
+                </div>
+              </div>
+
+              <div style={{marginTop:24, padding:'18px 0', borderTop:`1px solid ${B.border}`, borderBottom:`1px solid ${B.border}`, display:'flex', flexDirection:'column', gap:10}}>
+                {[
+                  {k:'Service',   v:{mowing:'Weekly mowing',edging:'Edging & trimming',beds:'Landscape beds',plow:'Driveway plowing',shovel:'Sidewalk shoveling'}[svc]},
+                  {k:'Frequency', v:freq},
+                  {k:'Date',      v:sel ? `${MONTHS[days[sel.dayIdx].date.getMonth()]} ${days[sel.dayIdx].date.getDate()}` : 'Select above'},
+                  {k:'Time',      v:sel ? days[sel.dayIdx].slots[sel.slotIdx].time : '—'},
+                ].map(r => (
+                  <div key={r.k} style={{display:'flex', justifyContent:'space-between', fontSize:14}}>
+                    <span style={{color:B.muted}}>{r.k}</span>
+                    <span style={{color:B.ink, fontWeight:500, textTransform:'capitalize'}}>{r.v}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={()=>can&&setDone(true)} disabled={!can} style={{
+                ...pBtn(), width:'100%', justifyContent:'center', marginTop:16, padding:'15px 20px',
+                opacity: can?1:.35, cursor: can?'pointer':'not-allowed',
+              }}>Request this appointment <IArrow s={16}/></button>
+              <div style={{fontSize:12, color:B.muted, textAlign:'center', marginTop:10}}>Free quote · No card required · Confirmed by phone</div>
+            </div>
+
+            <div style={{marginTop:20, background:B.ice2, padding:22, borderLeft:`3px solid ${B.wheat}`}}>
+              <div style={{fontSize:12, letterSpacing:'0.14em', color:B.wheat2, textTransform:'uppercase', fontWeight:600, marginBottom:8}}>Prefer to talk?</div>
+              <div style={{fontSize:15, color:B.ink, lineHeight:1.55}}>Bob answers the office line himself most days.</div>
+              <a href={`tel:${TSL.phone}`} style={{ marginTop:14, display:'inline-flex', alignItems:'center', gap:10,
+                color:B.lake, textDecoration:'none', fontSize:17, fontWeight:600, fontFamily:'Fraunces,serif' }}>
+                <IPhone s={18}/> {TSL.phone}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <Footer/>
+    </div>
+  );
+}
+
+function BookSuccess({ sel, days, form, setRoute }) {
+  const d = days[sel.dayIdx];
+  return (
+    <div>
+      <section style={{padding:'100px 48px', textAlign:'center'}}>
+        <div style={{maxWidth:560, margin:'0 auto'}}>
+          <div style={{ display:'inline-flex', alignItems:'center', justifyContent:'center',
+                         width:80, height:80, borderRadius:'50%', background:B.lake, color:B.birch, marginBottom:32 }}>
+            <ICheck s={34} sw={2.5}/>
+          </div>
+          <h1 style={{...D, fontSize:52, fontWeight:400, margin:'0 0 20px', lineHeight:1.05, letterSpacing:'-0.03em', color:B.lake}}>
+            You're on the schedule.
+          </h1>
+          <p style={{fontSize:18, color:B.ink, lineHeight:1.6, marginBottom:40}}>
+            Thanks{form.name ? `, ${form.name.split(' ')[0]}` : ''} — we've got you down for{' '}
+            <strong style={{color:B.lake}}>{MONTHS[d.date.getMonth()]} {d.date.getDate()}</strong> at{' '}
+            <strong style={{color:B.lake}}>{d.slots[sel.slotIdx].time}</strong>.
+            Someone from the office will ring you at {form.phone} within the hour to confirm.
+          </p>
+          <div style={{display:'inline-flex', gap:12, flexWrap:'wrap', justifyContent:'center'}}>
+            <button onClick={()=>setRoute('home')} style={pBtn()}>Back home <IArrow s={15}/></button>
+            <a href={`tel:${TSL.phone}`} style={{...gBtn(), textDecoration:'none'}}><IPhone s={14}/> Call us</a>
+          </div>
+        </div>
+      </section>
+      <Footer/>
+    </div>
+  );
+}
+
+// ── Small components ──
+function SeasonCard({ lead, eyebrow, title, body, img, tag, accent, icon, services, onClick }) {
+  return (
+    <div onClick={onClick} style={{ background:B.birch, cursor:'pointer', border:`1px solid ${B.border}`, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+      <div style={{height: lead?360:280, position:'relative', overflow:'hidden'}}>
+        <img src={img} alt="" style={{width:'100%', height:'100%', objectFit:'cover'}}/>
+        <div style={{ position:'absolute', top:16, left:16, display:'flex', alignItems:'center', gap:8,
+                       background:B.birch, padding:'6px 11px', borderRadius:20, fontSize:11.5,
+                       letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600, color:accent }}>
+          {icon} {tag}
+        </div>
+      </div>
+      <div style={{padding:'28px 30px', borderTop:`3px solid ${accent}`, flex:1, display:'flex', flexDirection:'column'}}>
+        <div style={{fontSize:12, color:B.muted, letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600, marginBottom:8}}>{eyebrow}</div>
+        <h3 style={{...D, fontSize: lead?36:30, margin:'0 0 12px', fontWeight:400, letterSpacing:'-0.02em', color:B.lake}} dangerouslySetInnerHTML={{__html:title}}/>
+        <p style={{fontSize:16, lineHeight:1.6, color:B.ink, margin:'0 0 18px', flex:1}}>{body}</p>
+        <div style={{display:'flex', flexWrap:'wrap', gap:8, marginBottom:18}}>
+          {services.map(s => <span key={s} style={{fontSize:12.5, background:B.ice2, color:B.ink, padding:'5px 10px', borderRadius:3}}>{s}</span>)}
+        </div>
+        <div style={{color:accent, fontWeight:600, fontSize:14, display:'flex', alignItems:'center', gap:8}}>Learn more <IArrow s={14}/></div>
+      </div>
+    </div>
+  );
+}
+
+function SeasonLeader({ kicker, title, desc, icon, accent }) {
+  return (
+    <div style={{display:'grid', gridTemplateColumns:'1fr 1.3fr', gap:40, alignItems:'end', borderBottom:`1px solid ${B.border}`, paddingBottom:18}}>
+      <div>
+        <div style={{fontSize:12, letterSpacing:'0.18em', color:accent, textTransform:'uppercase', fontWeight:600, marginBottom:12, display:'flex', alignItems:'center', gap:8}}>{icon} {kicker}</div>
+        <h2 style={{...D, fontSize:52, fontWeight:400, margin:0, letterSpacing:'-0.03em', color:B.lake, lineHeight:0.98}}>{title}</h2>
+      </div>
+      <p style={{fontSize:16.5, color:B.ink, lineHeight:1.65, margin:0}}>{desc}</p>
+    </div>
+  );
+}
+
+function ServiceCard({ name, desc, price, unit, img, details, accent }) {
+  return (
+    <div style={{background:B.birch, border:`1px solid ${B.border}`, overflow:'hidden'}}>
+      <img src={img} alt="" style={{width:'100%', height:200, objectFit:'cover'}}/>
+      <div style={{padding:'24px 26px 26px'}}>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:8}}>
+          <h3 style={{...D, fontSize:24, fontWeight:500, margin:0, letterSpacing:'-0.015em', color:B.lake}}>{name}</h3>
+          <div style={{textAlign:'right'}}>
+            <div style={{...D, fontSize:22, fontWeight:500, color:accent}}>{price}</div>
+            <div style={{fontSize:11.5, color:B.muted, textTransform:'uppercase', letterSpacing:'0.08em'}}>{unit}</div>
+          </div>
+        </div>
+        <p style={{fontSize:14.5, color:B.ink, lineHeight:1.55, margin:'0 0 16px'}}>{desc}</p>
+        <div style={{borderTop:`1px solid ${B.border}`, paddingTop:14}}>
+          {details.map(d => (
+            <div key={d} style={{display:'flex', gap:10, alignItems:'center', padding:'5px 0', fontSize:13.5, color:B.ink}}>
+              <ICheck s={14} color={accent} sw={2}/> {d}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Cal({ days, sel, onSel }) {
+  return (
+    <div style={{marginTop:18}}>
+      <div style={{display:'grid', gridTemplateColumns:'150px repeat(3,1fr)', background:B.lake, color:B.ice, fontSize:11.5, letterSpacing:'0.12em', textTransform:'uppercase', fontWeight:600}}>
+        {['Date','7:30 AM','10:00 AM','1:30 PM'].map(h => <div key={h} style={{padding:'12px 16px'}}>{h}</div>)}
+      </div>
+      <div style={{background:B.birch, border:`1px solid ${B.border}`, borderTop:'none'}}>
+        {days.slice(0,10).map((day,di) => (
+          <div key={di} style={{display:'grid', gridTemplateColumns:'150px repeat(3,1fr)', borderBottom: di<9 ? `1px solid ${B.border}` : 'none'}}>
+            <div style={{padding:'16px', borderRight:`1px solid ${B.border}`, background: di===0?B.ice2:B.birch}}>
+              <div style={{fontSize:12, color:B.muted, letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:500}}>{DOWS[day.date.getDay()]}</div>
+              <div style={{...D, fontSize:18, fontWeight:500, color:B.ink, marginTop:2}}>
+                {MONTHS[day.date.getMonth()]} {day.date.getDate()}
+                {di===0 && <span style={{fontSize:10, color:B.wheat2, marginLeft:6, letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:600}}>Today</span>}
+              </div>
+            </div>
+            {day.slots.map((slot,si) => {
+              const isSel = sel && sel.dayIdx===di && sel.slotIdx===si;
+              return (
+                <button key={si} onClick={()=>slot.free&&onSel({dayIdx:di,slotIdx:si})} disabled={!slot.free} style={{
+                  background: isSel ? B.lake : (slot.free ? B.birch : B.ice2),
+                  color: isSel ? B.birch : (slot.free ? B.ink : B.muted),
+                  border:'none', borderRight: si<2 ? `1px solid ${B.border}` : 'none',
+                  padding:'16px', fontFamily:'inherit', fontSize:14, fontWeight:500,
+                  cursor: slot.free ? 'pointer' : 'not-allowed',
+                  textAlign:'left', display:'flex', alignItems:'center', gap:8,
+                }}>
+                  {slot.free ? (<>{isSel ? <ICheck s={15} color={B.birch} sw={2.5}/> : <IClock s={14} color={B.wheat2}/>} {isSel?'Selected':'Open'}</>) : (<><span style={{width:10,height:2,background:B.muted,borderRadius:1}}/> Booked</>)}
+                </button>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+      <div style={{fontSize:12, color:B.muted, marginTop:10, display:'flex', gap:24, flexWrap:'wrap'}}>
+        {[{bg:B.birch,label:'Open'},{bg:B.ice2,label:'Booked'},{bg:B.lake,label:'Selected'}].map(s => (
+          <span key={s.label} style={{display:'flex', alignItems:'center', gap:6}}>
+            <span style={{width:10,height:10,background:s.bg,border:`1px solid ${B.border}`}}/> {s.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AreaMap() {
+  return (
+    <div style={{background:B.ice, padding:18, borderRadius:2}}>
+      <svg viewBox="0 0 480 380" style={{width:'100%',height:'auto',display:'block'}}>
+        <rect width="480" height="380" fill={B.ice}/>
+        <path d="M0 0 L0 380 L180 380 Q 170 310,190 250 Q 210 180,170 100 Q 130 40,100 0 Z" fill={B.lake} opacity=".95"/>
+        <text x="50" y="200" fill={B.ice} fontFamily="Fraunces" fontStyle="italic" fontSize="18" transform="rotate(-75 50 200)">Lake Michigan</text>
+        <circle cx="310" cy="190" r="135" fill={B.wheat} opacity=".1" stroke={B.wheat2} strokeWidth="1.5" strokeDasharray="5 4"/>
+        <path d="M180 110 Q 320 160,470 120" stroke={B.border} strokeWidth="1.5" fill="none"/>
+        <path d="M190 270 Q 320 250,470 290" stroke={B.border} strokeWidth="1.5" fill="none"/>
+        <path d="M310 40 L 310 340" stroke={B.border} strokeWidth="1.5" fill="none"/>
+        <rect x="376" y="192" width="30" height="16" rx="2" fill={B.birch} stroke={B.muted} strokeWidth=".5"/>
+        <text x="391" y="204" textAnchor="middle" fontFamily="DM Sans" fontSize="10" fontWeight="600" fill={B.ink}>I-94</text>
+        {[{x:210,y:140,n:'St. Joseph'},{x:240,y:185,n:'Benton Harbor',big:true},{x:265,y:245,n:'Stevensville'},{x:290,y:305,n:'Bridgman'},{x:390,y:155,n:'Coloma'},{x:410,y:220,n:'Watervliet'},{x:340,y:90,n:'Baroda'},{x:200,y:220,n:'Shoreham'}].map((t,i) => (
+          <g key={i}>
+            <circle cx={t.x} cy={t.y} r={t.big?6:3.5} fill={t.big?B.wheat2:B.lake} stroke={t.big?B.birch:'none'} strokeWidth="2"/>
+            <text x={t.x+10} y={t.y+4} fontFamily="DM Sans" fontSize={t.big?13:11.5} fontWeight={t.big?700:500} fill={B.ink}>{t.n}</text>
+          </g>
+        ))}
+        <g transform="translate(240 185)"><circle r="14" fill={B.wheat2} opacity=".25"/><circle r="9" fill="none" stroke={B.wheat2} strokeWidth="1.5" strokeDasharray="2 2"/></g>
+        <g transform="translate(340 340)">
+          <rect x="-6" y="-14" width="130" height="28" fill={B.birch} stroke={B.border} strokeWidth=".5"/>
+          <circle cx="6" cy="0" r="4" fill={B.wheat2}/>
+          <text x="16" y="4" fontFamily="DM Sans" fontSize="10" fill={B.ink}>The Shop</text>
+          <circle cx="76" cy="0" r="3" fill={B.lake}/>
+          <text x="84" y="4" fontFamily="DM Sans" fontSize="10" fill={B.ink}>Service area</text>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function StepHead({ n, title, compact }) {
+  return (
+    <div style={{display:'flex', alignItems:'center', gap:14, marginBottom: compact?0:4}}>
+      <div style={{ width:32, height:32, borderRadius:'50%', background:B.lake, color:B.birch,
+                     display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Fraunces,serif', fontSize:14, fontWeight:600 }}>{n}</div>
+      <div style={{...D, fontSize: compact?22:26, fontWeight:500, color:B.lake, letterSpacing:'-0.01em'}}>{title}</div>
+    </div>
+  );
+}
+
+function Closing({ setRoute }) {
+  return (
+    <section style={{padding:'0 48px 80px'}}>
+      <div className="tsl-grid-closing" style={{ background:B.lake, color:B.birch, padding:'72px 56px', borderRadius:2,
+                                                   display:'grid', gridTemplateColumns:'1.1fr 1fr', gap:48, alignItems:'center', position:'relative', overflow:'hidden' }}>
+        <svg style={{position:'absolute',right:-40,bottom:-40,opacity:.08}} width="400" height="300" viewBox="0 0 400 300">
+          {[0,1,2,3,4,5].map(i => <path key={i} d={`M-20 ${50+i*40} Q 100 ${30+i*40} 200 ${60+i*40} T 420 ${50+i*40}`} stroke={B.birch} strokeWidth="1" fill="none"/>)}
+        </svg>
+        <div style={{position:'relative'}}>
+          <div style={{fontSize:12, letterSpacing:'0.2em', color:B.wheat, textTransform:'uppercase', fontWeight:600, marginBottom:14}}>Get on the route</div>
+          <h2 style={{...D, fontSize:54, fontWeight:400, margin:0, lineHeight:1.05, letterSpacing:'-0.03em'}}>Ready when you are.</h2>
+          <p style={{fontSize:17, lineHeight:1.65, color:B.ice, marginTop:18, maxWidth:500}}>
+            Grab a time on the calendar, or call the office. Either way, you'll talk to a Thompson.
+          </p>
+        </div>
+        <div style={{position:'relative', display:'flex', flexDirection:'column', gap:14, alignItems:'flex-start'}}>
+          <button onClick={()=>setRoute('book')} style={{...pBtn(), background:B.wheat, color:B.ink, padding:'16px 24px', fontSize:15}}>Check availability <IArrow s={16}/></button>
+          <a href={`tel:${TSL.phone}`} style={{color:B.ice, fontSize:16.5, textDecoration:'none', display:'flex', alignItems:'center', gap:10}}><IPhone s={17}/> {TSL.phone}</a>
+          <div style={{color:B.ice, opacity:.7, fontSize:13.5, display:'flex', alignItems:'center', gap:8}}><IClock s={14}/> Mon–Sat · 7am to 6pm</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer style={{background:B.lake, color:B.ice, padding:'56px 48px 36px'}}>
+      <div className="tsl-grid-footer" style={{display:'grid', gridTemplateColumns:'1.4fr 1fr 1fr 1fr', gap:36, marginBottom:36}}>
+        <div>
+          <Logo invert/>
+          <p style={{fontSize:14.5, color:B.ice, opacity:.75, lineHeight:1.6, marginTop:20, maxWidth:300}}>
+            A family-run snow and lawn care outfit, working Berrien County since 1987.
+          </p>
+        </div>
+        {[
+          {title:'Visit',       lines:['1842 Territorial Rd','Benton Harbor, MI 49022','Mon–Sat · 7a–6p']},
+          {title:'Reach us',    lines:[TSL.phone, TSL.email, 'Text is fine']},
+          {title:'Service area',lines:['Benton Harbor · St. Joseph','Stevensville · Bridgman','Coloma · Watervliet','Baroda · Shoreham']},
+        ].map(col => (
+          <div key={col.title}>
+            <div style={{fontSize:11, letterSpacing:'0.2em', color:B.wheat, textTransform:'uppercase', marginBottom:14, fontWeight:600}}>{col.title}</div>
+            {col.lines.map((l,i) => <div key={i} style={{fontSize:14, color:B.ice, opacity:.85, lineHeight:1.7}}>{l}</div>)}
+          </div>
+        ))}
+      </div>
+      <div style={{borderTop:'1px solid rgba(232,238,241,.15)', paddingTop:20, display:'flex', justifyContent:'space-between', flexWrap:'wrap', gap:8, fontSize:12.5, color:B.ice, opacity:.7}}>
+        <span>© 2026 Thompson Snow & Lawn Care · Licensed · Insured · Bonded</span>
+        <span>Made in Berrien County, Michigan</span>
+      </div>
+    </footer>
+  );
+}
+
+// ── App shell ──
+function App() {
+  const [route, setRoute] = React.useState('home');
+  const routerRef = React.useRef(null);
+  React.useEffect(() => {
+    if (routerRef.current) routerRef.current.scrollTop = 0;
+  }, [route]);
+  return (
+    <div ref={routerRef} data-site-root style={{ fontFamily:'"DM Sans",-apple-system,system-ui,sans-serif', color:B.ink, background:B.birch, minHeight:'100vh', lineHeight:1.55, fontSize:15 }}>
+      <Header route={route} setRoute={setRoute}/>
+      {route==='home'     && <Home setRoute={setRoute}/>}
+      {route==='services' && <Services setRoute={setRoute}/>}
+      {route==='book'     && <Book setRoute={setRoute}/>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
