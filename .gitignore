@@ -1,0 +1,7 @@
+.env
+.env.local
+*.json.key
+*service_account*.json
+tslc-*.json
+node_modules/
+.vercel/
